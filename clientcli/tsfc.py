@@ -94,9 +94,6 @@ def download_file():
     
     print(" Download del file '" + os.path.basename(available_files[file_idx-1]) + "' in corso...")
 
-    # Crea la directory locale se non esiste
-    os.makedirs(LOCAL_DIRECTORY, exist_ok=True)
-
     # Crea socket TCP
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -202,6 +199,9 @@ if __name__ == '__main__':
         exit(1)
         
     available_files = []
+
+    # Crea la directory locale per il download (se non esiste)
+    os.makedirs(LOCAL_DIRECTORY, exist_ok=True)
 
     while True:
         menu()

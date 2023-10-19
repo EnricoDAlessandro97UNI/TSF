@@ -1,0 +1,6 @@
+clientcli/build/
+clientcli/dist/
+clientcli/tsfc.spec
+servercli/build/
+servercli/dist/
+servercli/tsfs.spec
