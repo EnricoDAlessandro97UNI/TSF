@@ -1,5 +1,3 @@
-from tkinter import *
-from tkinter import ttk
 import os
 import platform
 import socket
@@ -42,6 +40,8 @@ def list_file():
 
     global available_files
 
+    available_files = []
+
     print(f"\n Richiesta della lista dei file disponibili al server {IP_SERVER}")
 
     # Crea socket TCP
@@ -57,6 +57,10 @@ def list_file():
         # Ricezione dei dati
         file_list = receive_data(client_socket)
 
+        if len(file_list) == 0:
+            print("\n Al momento non vi sono file disponibili per il download")
+            return 0
+
         # Stampa la lista dei file
         print("\n File disponibili: ")  
         idx = 1  
@@ -65,17 +69,24 @@ def list_file():
             print("  " + str(idx) + ": " + os.path.basename(file_name))
             idx += 1
 
+        return 1
+
     except ConnectionRefusedError:
         print(f"\n [Attenzione] - Impossibile connettersi al server {IP_SERVER}:{PORT}")
+        return 0
     except Exception as e:
-        print(f" [Attenzione] - Errore durante la ricezione della lista dei file: {str(e)}")
+        print(f"\n\n [Attenzione] - Errore durante la ricezione della lista dei file: {str(e)}")
+        return 0
 
     finally:
         client_socket.close()
 
 
 def download_file():
-    list_file()
+    
+    if (list_file() == 0):
+        return
+
     file_idx = int(input('\n Inserire il numero del file da scaricare: '))
     if (file_idx < 1 or file_idx > len(available_files)):
         print(" Indice inserito non valido")
@@ -129,7 +140,7 @@ def download_file():
     except ConnectionRefusedError:
         print(f"\n [Attenzione] - Impossibile connettersi al server {IP_SERVER}:{PORT}")
     except Exception as e:
-        print(f" [Attenzione] - Errore durante la ricezione della lista dei file: {str(e)}")
+        print(f"\n\n [Attenzione] - Errore durante la ricezione della lista dei file: {str(e)}")
 
     finally:
         client_socket.close()
@@ -180,9 +191,9 @@ if __name__ == '__main__':
     IP_SERVER = input("Inserisci l'IP del server: ")
 
     if OS == WINDOWS:
-        LOCAL_DIRECTORY = "clientcli\\downloadTSF"
+        LOCAL_DIRECTORY = "downloadTSF"
     elif OS == LINUX:
-        LOCAL_DIRECTORY = "clientcli/downloadTSF"
+        LOCAL_DIRECTORY = "downloadTSF"
     elif OS == MACOS:
         print("Sistema operativo non supportato")
         exit(1)

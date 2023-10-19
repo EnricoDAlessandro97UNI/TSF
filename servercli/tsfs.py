@@ -2,15 +2,7 @@ import os
 import platform
 import socket
 import struct
-import time
 from pathlib import Path
-
-
-PORT = 12345
-SERVER_DIRECTORY_PATH = ""
-WINDOWS = "windows"
-LINUX = "linux"
-MACOS = "darwin"
 
 
 def send_data(client_socket, data):
@@ -120,7 +112,7 @@ def init_server_folder():
         raise Exception("ci scusiamo, sistema operativo non supportato")
 
     # Crea la directory locale per i download se non esiste
-    print(SERVER_DIRECTORY_PATH)
+    # print(SERVER_DIRECTORY_PATH)
     os.makedirs(SERVER_DIRECTORY_PATH, exist_ok=True)
 
 
@@ -155,4 +147,23 @@ def start_server():
 
 
 if __name__ == '__main__':
+    
+    PORT = 12345
+    SERVER_DIRECTORY_PATH = ""
+    WINDOWS = "windows"
+    LINUX = "linux"
+    MACOS = "darwin"
+    OS = platform.system().lower()
+
+    if OS == WINDOWS:
+        os.system("cls")
+        SERVER_DIRECTORY_PATH = SERVER_DIRECTORY_PATH + "\\Downloads" + "\\SERVER_FILES\\"
+    elif OS == LINUX:  
+        os.system("clear")
+        SERVER_DIRECTORY_PATH = SERVER_DIRECTORY_PATH + "/Downloads" + "/SERVER_FILES/"
+    elif OS == MACOS: 
+        raise Exception("Sistema operativo non supportato")
+    else:
+        raise Exception("Sistema operativo non supportato")
+
     start_server()
