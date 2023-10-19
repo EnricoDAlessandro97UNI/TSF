@@ -8,6 +8,9 @@ from pathlib import Path
 
 PORT = 12345
 SERVER_DIRECTORY_PATH = ""
+WINDOWS = "windows"
+LINUX = "linux"
+MACOS = "darwin"
 
 
 def send_data(client_socket, data):
@@ -107,16 +110,17 @@ def handle_client(client_socket):
 def init_server_folder():
     global SERVER_DIRECTORY_PATH
     SERVER_DIRECTORY_PATH = str(Path.home())
-    print(SERVER_DIRECTORY_PATH)
-    if platform.system().lower() == 'windows':
+    if platform.system().lower() == WINDOWS:
         SERVER_DIRECTORY_PATH = SERVER_DIRECTORY_PATH + "\\Downloads" + "\\SERVER_FILES\\"
-        print(SERVER_DIRECTORY_PATH)
-    elif platform.system().lower() == 'linux':  
+    elif platform.system().lower() == LINUX:  
         SERVER_DIRECTORY_PATH = SERVER_DIRECTORY_PATH + "/Downloads" + "/SERVER_FILES/"
-    else: # darwin == MacOS
-        pass
+    elif platform.system().lower() == MACOS: 
+        raise Exception("ci scusiamo, sistema operativo non supportato")
+    else:
+        raise Exception("ci scusiamo, sistema operativo non supportato")
 
     # Crea la directory locale per i download se non esiste
+    print(SERVER_DIRECTORY_PATH)
     os.makedirs(SERVER_DIRECTORY_PATH, exist_ok=True)
 
 
