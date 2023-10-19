@@ -3,6 +3,7 @@ from tkinter import ttk
 import os
 import socket
 import struct
+import time
 
 PORT = 12345
 
@@ -79,10 +80,12 @@ def download_file(ip_server, remote_file_path, local_directory):
         bytes_received = 0
         with open(file_path, 'wb') as f:
             while bytes_received < file_size:
-                data = client_socket.recv(min(4096, file_size - bytes_received))
+                data = client_socket.recv(min(1024, file_size - bytes_received))
                 if not data:
                     break
                 f.write(data)
+                #f.flush()
+                
                 # Aggiorna la progress bar e la percentuale di ricezione
                 bytes_received += len(data)
                 progress = float((bytes_received / file_size) * 100)
@@ -160,7 +163,7 @@ def on_file_list_select(event):
 window = Tk()
 window.title("TSF")
 window.configure(background="#222222")
-window.geometry("800x900")
+window.geometry("800x920")
 window.resizable(False, False)
 
 style = ttk.Style()
@@ -231,7 +234,7 @@ entry_downloadDir = Entry(window,
                           width=50,
                           background="#dcdcdc"
                           )
-entry_downloadDir.insert(0, "/home/enrico/Downloads/TSF")
+entry_downloadDir.insert(0, "DownloadTSF")
 entry_downloadDir.pack(padx=15)
 
 btn_download = Button(window,

@@ -1,6 +1,8 @@
 import os
+import platform
 import socket
 import struct
+import time
 from pathlib import Path
 
 
@@ -57,10 +59,11 @@ def send_file(client_socket, remote_file_path):
     # Invia il contenuto del file al client
     with open(remote_file_path, 'rb') as f:
         while True:
-            data = f.read(4096)
+            data = f.read(1024)
             if not data:
                 break
             client_socket.sendall(data)
+            #time.sleep(0.5) # sleep for 100 ms
     print(f"[+] Invio del file {remote_file_path} al client {client_socket.getpeername()[0]} completato")
 
 
@@ -104,7 +107,14 @@ def handle_client(client_socket):
 def init_server_folder():
     global SERVER_DIRECTORY_PATH
     SERVER_DIRECTORY_PATH = str(Path.home())
-    SERVER_DIRECTORY_PATH = SERVER_DIRECTORY_PATH + "/Downloads" + "/SERVER_FILES/"
+    print(SERVER_DIRECTORY_PATH)
+    if platform.system().lower() == 'windows':
+        SERVER_DIRECTORY_PATH = SERVER_DIRECTORY_PATH + "\\Downloads" + "\\SERVER_FILES\\"
+        print(SERVER_DIRECTORY_PATH)
+    elif platform.system().lower() == 'linux':  
+        SERVER_DIRECTORY_PATH = SERVER_DIRECTORY_PATH + "/Downloads" + "/SERVER_FILES/"
+    else: # darwin == MacOS
+        pass
 
     # Crea la directory locale per i download se non esiste
     os.makedirs(SERVER_DIRECTORY_PATH, exist_ok=True)
@@ -134,8 +144,10 @@ def start_server():
 
     except KeyboardInterrupt:
         print("\n[!] Server interrotto")
+        exit(1)
     except Exception as e:
         print(f"\n[!] Errore durante l'esecuzione del server: {str(e)}")
+        exit(1)
 
 
 if __name__ == '__main__':
